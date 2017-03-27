@@ -35,7 +35,6 @@ for SEQUENCE in SeqIO.parse(sys.argv[2],'fasta',IUPAC.ambiguous_dna):
 	for COORDINATE in COORDINATE_LIST:
 		if COORDINATE[0] == SEQ_NAME:
 			print 'Processing',SEQ_NAME
-			RECORD="REC"+str(COUNT)
 			START=COORDINATE[1]-1
 			STOP=COORDINATE[2]-1
 			CUT_SEQ_RECORDS.append(SEQUENCE[START:STOP])
