@@ -4,7 +4,7 @@ Useful scripts for molecular data manipulation
 ---------------------------------------------
 Pull_coordinates.py
 Pulls a range of sites for sequences in a fasta file. Both coordinate template and fasta file must contain sequences with equivalent headers (e.g., Sequence "Drosophila_TRAF6" must appear in both files).
-
+Program works with reverse coordinates (e.g., 501->204)
 Usage:
 
 Inputs 
