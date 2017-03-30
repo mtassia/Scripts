@@ -1,9 +1,8 @@
 #!/usr/bin/python
-#Runs using BioPython and Python2.7
-#Argument1 = Renaming template, Argument2 = Fasta file
 
 from Bio import SeqIO
 from Bio.Alphabet import IUPAC
+from Bio.Seq import Seq
 import sys
 
 #Obtain sequences headers and coordinates for extraction
@@ -35,9 +34,20 @@ for SEQUENCE in SeqIO.parse(sys.argv[2],'fasta',IUPAC.ambiguous_dna):
 	for COORDINATE in COORDINATE_LIST:
 		if COORDINATE[0] == SEQ_NAME:
 			print 'Processing',SEQ_NAME
-			START=COORDINATE[1]-1
-			STOP=COORDINATE[2]-1
-			CUT_SEQ_RECORDS.append(SEQUENCE[START:STOP])
+			if COORDINATE[1] > COORDINATE[2]:	#If coordinates refer to reverse sequence
+				if COORDINATE[2] == 1:
+					STOP=COORDINATE[1]-1
+					print(SEQUENCE[STOP::-1])
+					CUT_SEQ_RECORDS.append(SEQUENCE[STOP::-1])
+				if COORDINATE[2] > 1:
+					START=COORDINATE[1]-1
+					STOP=COORDINATE[2]-1
+					print(SEQUENCE[START:STOP:-1])
+					CUT_SEQ_RECORDS.append(SEQUENCE[START:STOP:-1])
+			if COORDINATE[2] > COORDINATE[1]:	#If coordinates refer to forward sequence
+				START=COORDINATE[1]-1
+				STOP=COORDINATE[2]
+				CUT_SEQ_RECORDS.append(SEQUENCE[START:STOP])
 			COUNT+=1
 print 'Total number of sequences processed:',COUNT
 
