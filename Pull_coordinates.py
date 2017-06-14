@@ -34,6 +34,8 @@ for SEQUENCE in SeqIO.parse(sys.argv[2],'fasta',IUPAC.ambiguous_dna):
 	for COORDINATE in COORDINATE_LIST:
 		if COORDINATE[0] == SEQ_NAME:
 			print 'Processing',SEQ_NAME
+			SEQUENCE.description=SEQ_NAME+"_sites_"+str(COORDINATE[1])+"-"+str(COORDINATE[2]) #Rename sequence header
+			SEQUENCE.id=SEQ_NAME+"_sites_"+str(COORDINATE[1])+"-"+str(COORDINATE[2]) #Rename sequence header
 			if COORDINATE[1] > COORDINATE[2]:	#If coordinates refer to reverse sequence
 				if COORDINATE[2] == 1:
 					STOP=COORDINATE[1]-1
