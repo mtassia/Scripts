@@ -1,5 +1,6 @@
 # Scripts
-Useful scripts for molecular data manipulation
+Useful scripts for molecular data manipulation.
+Author note: This repository is not actively maintained and remains as a legacy repo (MGT 7-6-2018).
 
 ---------------------------------------------
 Pull_coordinates.py
