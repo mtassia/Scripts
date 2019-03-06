@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+#Warning, this code is not well annotated
 
 from Bio import SeqIO
 from Bio.Alphabet import IUPAC
