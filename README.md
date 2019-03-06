@@ -11,8 +11,8 @@ Program works with reverse coordinates (e.g., 501->204)
 **Usage:**
 
 Inputs
-1. Coordinate_template (`.tsv`)
-2. Fasta file (`.fasta`)
+1. Coordinate_template (`*.tsv`)
+2. Fasta file (`*.fasta`)
 
 Output
 1. `*.regions_extracted.fasta`
@@ -33,4 +33,7 @@ Parses the domain-table output format (`--domtblout`) from [`HMMER`](http://hmme
 **Usage:**
 
 Inputs
-1. Domain-table file (`.domtblout`)
+1. Domain-table file (`*.domtblout`)
+
+Output
+1. Filtered domain table (`*.besthits.tsv`)
