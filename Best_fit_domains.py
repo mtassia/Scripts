@@ -5,10 +5,10 @@ import sys
 #ATOM-SPECIFIC BLOCK FOR BUILDING CODE:
 #import os
 #print(os.getcwd())
-DOMTBLOUT=open("Hsapiens_genome_proteins_RHIM_Pfam_model.Present.Pfam.domtblout", 'r') #REMOVE THIS FOR FINAL VERSION; REINITIALIZE THE VARIABLE OPTION ON LINE 11
+#DOMTBLOUT=open("Hsapiens_genome_proteins_RHIM_Pfam_model.Present.Pfam.domtblout", 'r') #REMOVE THIS FOR FINAL VERSION; REINITIALIZE THE VARIABLE OPTION ON LINE 11
 #######################################
 
-#DOMTBLOUT=open(sys.argv[1], 'r') #First argument is the domain-table output from HMMEr
+DOMTBLOUT=open(sys.argv[1], 'r') #First argument is the domain-table output from HMMEr
 ANNOTATION_LIST=[] #Initiates the list that will be filled as DOMTBLOUT is read and indexed in block below
 
 #Following for-loop reads, line-by-line, DOMTBLOUT and loads it into ANNOTATION_LIST after proper indexing
@@ -49,8 +49,8 @@ for QUERY in ANNOTATION_LIST:
 				QUERY_LENGTH_RANGE.remove(RESIDUE)
 
 #SANITY CHECK##############################
-		print(QUERY[3],QUERY_LENGTH_RANGE)
-		print(QUERY[0],DOMAIN_RANGE)
+#		print(QUERY[3],QUERY_LENGTH_RANGE)
+#		print(QUERY[0],DOMAIN_RANGE)
 ###########################################
 
 		PREVIOUS_QUERY=QUERY #Load current line into the PREVIOUS_QUERY variable for future comparison
@@ -60,13 +60,13 @@ for QUERY in ANNOTATION_LIST:
 
 		#Block checks for the following annotation problems with the currently loaded domain: Start overlap with previous, better hit; Stop overlap; Current domain encompasses previous, better hit. If any of these errors occur, better domain already annotated in region and currently loaded domain should be skipped.
 		if DOMAIN_RANGE[0] not in QUERY_LENGTH_RANGE:
-			print(QUERY[0], "start overlaps a previous domain")
+			#print(QUERY[0], "start overlaps a previous domain") #Line present for testing code in Atom
 			continue
 		elif DOMAIN_RANGE[-1] not in QUERY_LENGTH_RANGE:
-			print(QUERY[0], "end overlaps a previous domain")
+			#print(QUERY[0], "end overlaps a previous domain") #Line present for testing code in Atom
 			continue
 		elif DOMAIN_RANGE[int(len(DOMAIN_RANGE)/2)] not in QUERY_LENGTH_RANGE:
-			print(QUERY[0], "encompasses a previous domain")
+			#print(QUERY[0], "encompasses a previous domain") #Line present for testing code in Atom
 			continue
 
 #SANITY CHECK##############################
@@ -88,8 +88,11 @@ for QUERY in ANNOTATION_LIST:
 ###########################################
 
 #Write BEST_HIT_LINES to a file as a tsv
-#FILE_OUTPUT_NAME=sys.argv[1]+".besthits.tsv"
-FILE_OUTPUT=open(("tmp_test"+".besthits.tsv"),'w') #Replace this line with the above line for final implementation
+FILE_OUTPUT=open((sys.argv[1]+".besthits.tsv"),'w')
+#FILE_OUTPUT=open(("tmp_test"+".besthits.tsv"),'w') #Line present for testing code in Atom
+
 for LINE in BEST_HIT_LINES:
-#	print('\t'.join(map(str,LINE))+"\n")
+#	print('\t'.join(map(str,LINE))+"\n") #Line present for testing code in Atom
 	FILE_OUTPUT.write('\t'.join(map(str,LINE))+"\n")
+FILE_OUTPUT.close()
+
