@@ -5,8 +5,29 @@ import sys
 #ATOM-SPECIFIC BLOCK FOR BUILDING CODE:
 #import os
 #print(os.getcwd())
-#DOMTBLOUT=open("Hsapiens_genome_proteins_RHIM_Pfam_model.Present.Pfam.domtblout", 'r') #REMOVE THIS FOR FINAL VERSION; REINITIALIZE THE VARIABLE OPTION ON LINE 11
+#DOMTBLOUT=open("Hsapiens_genome_proteins_RHIM_Pfam_model.Present.Pfam.domtblout", 'r') #VARIABLE INITIALIZED AS VARIABLE ON LINE 32 FOR FINAL VERSION
 #######################################
+
+#Command will convert indices corresponding to integers to integers and those corresponding to floats as floats
+def convert_domtblout_values(string_list):
+	string_list[2] = int(string_list[2])
+	string_list[5] = int(string_list[5])
+	string_list[9] = int(string_list[9])
+	string_list[10] = int(string_list[10])
+	string_list[15] = int(string_list[15])
+	string_list[16] = int(string_list[16])
+	string_list[17] = int(string_list[17])
+	string_list[18] = int(string_list[18])
+	string_list[19] = int(string_list[19])
+	string_list[20] = int(string_list[20])
+	string_list[6] = float(string_list[6])
+	string_list[7] = float(string_list[7])
+	string_list[8] = float(string_list[8])
+	string_list[11] = float(string_list[11])
+	string_list[12] = float(string_list[12])
+	string_list[13] = float(string_list[13])
+	string_list[14] = float(string_list[14])
+	string_list[21] = float(string_list[21])
 
 DOMTBLOUT=open(sys.argv[1], 'r') #First argument is the domain-table output from HMMEr
 ANNOTATION_LIST=[] #Initiates the list that will be filled as DOMTBLOUT is read and indexed in block below
@@ -27,15 +48,32 @@ for LINE in DOMTBLOUT:
 			DESCRIPTION+=DOMTBL_LINE[INDEX]+" " #Import the 22: indices into a single string
 		del DOMTBL_LINE[22:] #Remove the improperly formatted indices from DOMTBL_LINE
 		DOMTBL_LINE.append(DESCRIPTION.rstrip()) #Replace the removed indices with the properly formatted index
-
+		convert_domtblout_values(DOMTBL_LINE) #Convert integer and float indices to their appropriate classes
 		ANNOTATION_LIST.append(DOMTBL_LINE) #After cleaning datalines, append to this variable. ANNOTATION_LIST will be a list-of-lists where each primary index is a line from the DOMTBLOUT
 DOMTBLOUT.close()
+
+#Change ANNOTATION_LIST integer values from strings to integers
+
+#SANTIY CHECK FOR ATOM
+#for i in ANNOTATION_LIST:
+#	print(i)
+######################
+
+ANNOTATION_LIST.sort(key = lambda x: (x[3], x[11])) #Sort list by the sequence accession, then by the conditional e-value. Later, any c-evalue >0.01 will be removed
+
+#SANTIY CHECK FOR ATOM
+#for i in ANNOTATION_LIST:
+#	print(i)
+######################
 
 BEST_HIT_LINES=[] #Create a new list that will contain only the best hits for each query
 PREVIOUS_QUERY=[] #Creates a list variable that will be used to compare lines as ANNOTATION_LIST is read
 
 #For-loop will loop through ANNOTATION, per line from DOMTBLOUT. Each loop will load a 22-field list object into QUERY
 for QUERY in ANNOTATION_LIST:
+
+	if (QUERY[6] > 0.01) or (QUERY[11] > 0.01): #If per-sequence e-value > 0.01 or per-domain e-value > 0.01, inclusion threshold not met and line is skipped
+		continue
 
 	#If reading first data line or reading a line describing a new sequence from the previous line, following block will build a range list according to the sequence's length to build best domain-architecture where no two domains can overlap (i.e., best-hit domains only kept per sequence)
 	if (PREVIOUS_QUERY == []) or (PREVIOUS_QUERY[3] != QUERY[3]): #If previous query doesn't exist (i.e., first iteration of loop) or line pertains to a new sequence from the previous line, do the following...
@@ -55,7 +93,7 @@ for QUERY in ANNOTATION_LIST:
 
 		PREVIOUS_QUERY=QUERY #Load current line into the PREVIOUS_QUERY variable for future comparison
 
-	else: # FIX THIS BLOCK WHICH INTENDS TO, FOR EVERY NON-OVERLAPPING DOMAIN, REMOVE IT'S RANGE FROM THE RANGE OF THE CURRENT QUERY
+	else: # FOR EVERY NON-OVERLAPPING DOMAIN, REMOVE IT'S RANGE FROM THE RANGE OF THE CURRENT QUERY
 		DOMAIN_RANGE=list(range(int(QUERY[19]),int(QUERY[20]))) #Load coordinate range where domain in line is present
 
 		#Block checks for the following annotation problems with the currently loaded domain: Start overlap with previous, better hit; Stop overlap; Current domain encompasses previous, better hit. If any of these errors occur, better domain already annotated in region and currently loaded domain should be skipped.
@@ -92,7 +130,6 @@ FILE_OUTPUT=open((sys.argv[1]+".besthits.tsv"),'w')
 #FILE_OUTPUT=open(("tmp_test"+".besthits.tsv"),'w') #Line present for testing code in Atom
 
 for LINE in BEST_HIT_LINES:
-#	print('\t'.join(map(str,LINE))+"\n") #Line present for testing code in Atom
+	#print('\t'.join(map(str,LINE))+"\n") #Line present for testing code in Atom
 	FILE_OUTPUT.write('\t'.join(map(str,LINE))+"\n")
 FILE_OUTPUT.close()
-
