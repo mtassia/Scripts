@@ -2,7 +2,7 @@
 #Initial module import and directory setup
 import svgwrite
 
-#Creating variables that will be needed to be imported from HMMer domain_table
+#Creating variables that will be needed to be imported from HMMer domain_table, will be changed to be an import function
 ANNOTATION_LIST=[["SEQ1",300,"DOMAIN_1",50,150],["SEQ1",300,"DOMAIN_2",200,268],["SEQ2",400,"DOMAIN_1",20,80],["SEQ2",400,"DOMAIN_2",81,204],["SEQ2",400,"DOMAIN_2",290,399]]
 SEQUENCE_IDS=[]
 SEQUENCE_LENGTHS=[]
@@ -31,8 +31,10 @@ for SEQi in range(len(SEQLEN_DICT)):
         str(SEQUENCE_IDS[SEQi]),
         insert=(0,((SEQi*30)+15)),
         stroke='none',
-        fill=svgwrite.rgb(0,0,0),
-        textLength='50px',
+        fill=svgwrite.rgb(0,0,0), #Write letters in black with no stroke
+        textLength='50px', #Sequence name will not exceed 50px prior to sequence illustration
+        lengthAdjust="spacingAndGlyphs", #If sequence is less or greater than 50px, stretch to fit
+        alignment_baseline="middle", #Positioning baseline is set to the middle of the written text
         font_size='10px',
         font_weight='bold',
         font_family='Arial'
@@ -45,4 +47,4 @@ for SEQi in range(len(SEQLEN_DICT)):
     ))
 
 #Save Drawing
-svgdoc.save()
+svgdoc.saveas("test_drawing.svg")
