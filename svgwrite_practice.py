@@ -1,3 +1,4 @@
+#This code is entirely experimental and is being developed to accelerate domain diagram creation
 #Initial module import and directory setup
 import svgwrite
 
