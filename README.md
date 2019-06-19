@@ -37,3 +37,8 @@ Inputs
 
 Output
 1. Filtered domain table (`*.besthits.tsv`)
+
+___
+### `svgwrite_practice.py`
+Domain architecture diagram generator under development.
+More to come.

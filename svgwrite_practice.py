@@ -47,7 +47,7 @@ for SEQi in range(len(SEQLEN_DICT)):
         stroke_width='1px'
     ))
 
-#Iterate through annotations per sequence
+#Iterate through annotations per sequence to make domain overlays
 COUNT=0 #Create a count variable which will help with y-axis formatting as the annotations are looped
 for ID in SEQUENCE_IDS: #Loop through a list of the sequence IDs
     for ANNOTATION in ANNOTATION_LIST: #Loop through entries in the annotation list
@@ -55,7 +55,7 @@ for ID in SEQUENCE_IDS: #Loop through a list of the sequence IDs
                 DOMAIN_NAME=ANNOTATION[2] #Load the domain name
                 DOMAIN_START=ANNOTATION[3] #Load the start coordinate for the domain
                 DOMAIN_END=ANNOTATION[4] #Load the end coordinate for the domain
-                svgdoc.add(svgdoc.rect(
+                svgdoc.add(svgdoc.rect( #Create a rectangle overlaying the line that corresponds to each domain
                     insert=((LINE_SCAFFOLD_START+DOMAIN_START),((COUNT*30)+7.5)),
                     size=(((DOMAIN_END)-(DOMAIN_START)),15),
                     rx=2, #Make rectangles with rounded edges
@@ -63,6 +63,10 @@ for ID in SEQUENCE_IDS: #Loop through a list of the sequence IDs
                     stroke="black",
                     stroke_width="1px",
                 ))
+#                svgdoc.add(svgdoc.text(
+#                    str(DOMAIN_NAME),
+
+#                ))
     COUNT+=1
 
 #Save Drawing
