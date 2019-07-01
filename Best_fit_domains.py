@@ -8,7 +8,7 @@ import sys
 #DOMTBLOUT=open("Hsapiens_genome_proteins_RHIM_Pfam_model.Present.Pfam.domtblout", 'r') #VARIABLE INITIALIZED AS VARIABLE ON LINE 32 FOR FINAL VERSION
 #######################################
 
-#Command will convert indices corresponding to integers to integers and those corresponding to floats as floats
+#Function will convert indices corresponding to integers to integers and those corresponding to floats as floats
 def convert_domtblout_values(string_list):
 	string_list[2] = int(string_list[2])
 	string_list[5] = int(string_list[5])
@@ -28,6 +28,26 @@ def convert_domtblout_values(string_list):
 	string_list[13] = float(string_list[13])
 	string_list[14] = float(string_list[14])
 	string_list[21] = float(string_list[21])
+
+#Function will check if items in range_1 are not in range_2. If not in range_2, will return 'OVERLAP'
+
+def check_range_overlap(subset_range,full_range):
+	OVERLAP="False"
+	for i in subset_range:
+		if i not in full_range:
+			OVERLAP="True"
+	if OVERLAP=="True":
+		return("OVERLAP")
+	elif OVERLAP=="False":
+		return("NO OVERLAP")
+
+#FOLLOWING COMMANDS ARE FOR CHECKING THE check_range_overlap FUNCTION
+#subset_rangeA=list(range(25,50)) #Generate a subset list encompassed by the full list
+#subset_rangeB=list(range(180,240)) #Generate a subset list not fully encompassed by the full list
+#full_range=(list(range(200))+list(range(250,300))) #Generate a full, non-contiguous list
+#check_range_overlap(subset_rangeA,full_range) #Check function
+#check_range_overlap(subset_rangeB,full_range) #Check function
+#####################################################################
 
 DOMTBLOUT=open(sys.argv[1], 'r') #First argument is the domain-table output from HMMEr
 ANNOTATION_LIST=[] #Initiates the list that will be filled as DOMTBLOUT is read and indexed in block below
@@ -52,13 +72,12 @@ for LINE in DOMTBLOUT:
 		ANNOTATION_LIST.append(DOMTBL_LINE) #After cleaning datalines, append to this variable. ANNOTATION_LIST will be a list-of-lists where each primary index is a line from the DOMTBLOUT
 DOMTBLOUT.close()
 
-#Change ANNOTATION_LIST integer values from strings to integers
-
 #SANTIY CHECK FOR ATOM
 #for i in ANNOTATION_LIST:
 #	print(i)
 ######################
 
+#Change ANNOTATION_LIST integer values from strings to integers
 ANNOTATION_LIST.sort(key = lambda x: (x[3], x[11])) #Sort list by the sequence accession, then by the conditional e-value. Later, any c-evalue >0.01 will be removed
 
 #SANTIY CHECK FOR ATOM
@@ -103,7 +122,7 @@ for QUERY in ANNOTATION_LIST:
 		elif DOMAIN_RANGE[-1] not in QUERY_LENGTH_RANGE:
 			#print(QUERY[0], "end overlaps a previous domain") #Line present for testing code in Atom
 			continue
-		elif DOMAIN_RANGE[int(len(DOMAIN_RANGE)/2)] not in QUERY_LENGTH_RANGE:
+		elif check_range_overlap(DOMAIN_RANGE,QUERY_LENGTH_RANGE) == "OVERLAP":
 			#print(QUERY[0], "encompasses a previous domain") #Line present for testing code in Atom
 			continue
 
@@ -127,7 +146,7 @@ for QUERY in ANNOTATION_LIST:
 
 #Write BEST_HIT_LINES to a file as a tsv
 FILE_OUTPUT=open((sys.argv[1]+".besthits.tsv"),'w')
-#FILE_OUTPUT=open(("tmp_test"+".besthits.tsv"),'w') #Line present for testing code in Atom
+#FILE_OUTPUT=open(("tmp_test_OLD"+".besthits.tsv"),'w') #Line present for testing code in Atom
 
 for LINE in BEST_HIT_LINES:
 	#print('\t'.join(map(str,LINE))+"\n") #Line present for testing code in Atom
