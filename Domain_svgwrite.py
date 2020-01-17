@@ -4,16 +4,16 @@ import svgwrite
 
 #Creating variables that will be needed to be imported from HMMer domain_table, will be changed to be an import function
 ANNOTATION_LIST=[["SEQ1",300,"DOMAIN_1",50,150],["SEQ1",300,"DOMAIN_2",200,268],["SEQ200",400,"DOMAIN_1",20,80],["SEQ200",400,"DOMAIN_2",81,204],["SEQ200",400,"DOMAIN_200",290,399]] #Simulates a best_hit_domains.py output
-SEQUENCE_IDS=[]
-SEQUENCE_LENGTHS=[]
+SEQUENCE_IDS=[] #Create a list of unique sequence IDs such that number of indices in this list is the number of annotated sequences
+SEQUENCE_LENGTHS=[] #Create a list
 SEQLEN_DICT={}
 
 for i in ANNOTATION_LIST: #Obtain basic sequence information
     if i[0] not in SEQUENCE_IDS:
-            SEQUENCE_IDS.append(i[0])
-            SEQLEN_DICT[str(i[0])]=int(i[1])
+            SEQUENCE_IDS.append(i[0]) # Add new sequence ID to list
+            SEQLEN_DICT[str(i[0])]=int(i[1]) #Create a dictionary pair between new sequence ID and it's associated length
     if i[1] not in SEQUENCE_LENGTHS:
-            SEQUENCE_LENGTHS.append(i[1])
+            SEQUENCE_LENGTHS.append(i[1]) #Create a list of sequence lengths to be used to format the svg document size
 
 SEQUENCE_LENGTHS.sort(reverse=True) #Sort sequence lengths in descending order to find the longest sequence length
 LONGEST_SEQ=SEQUENCE_LENGTHS[0] #Use the longest sequence to generate the width of the svg canvas
@@ -27,6 +27,8 @@ svgdoc=svgwrite.Drawing(
     size = (((LONGEST_ID_LEN*10)+LONGEST_SEQ+5),NUM_SEQS*30)) #At size 10 arial bold, the W glyph is 9.43px -- therefor the x for scaffold size is loaded as a function of (longest length sequence name * 10) + (length of longest sequence). Y scaffold size is loaded as the number of sequences * 30 (15 above and below scaffold line) for appropriate spacing. Final 5 accounts for the spacing between text and the line object.
 
 SEQLEN_DICT[SEQUENCE_IDS[0]] #HERE FOR TESTING PURPOSES ONLY - CAN DELETE
+print(SEQLEN_DICT) #HERE FOR TESTING PURPOSES ONLY - CAN DELETE
+
 #Create TEXT AND LINE-SCAFFOLD PER SEQUENCE
 for SEQi in range(len(SEQLEN_DICT)):
     svgdoc.add(svgdoc.text( #Create the text for the sequence scaffold
