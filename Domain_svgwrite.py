@@ -3,7 +3,7 @@
 import svgwrite
 
 #Creating variables that will be needed to be imported from HMMer domain_table, will be changed to be an import function
-ANNOTATION_LIST=[["SEQ1",300,"DOMAIN_1",50,150],["SEQ1",300,"DOMAIN_2",200,268],["SEQ100200300400500",400,"DOMAIN_1",20,80],["SEQ100200300400500",400,"DOMAIN_2",81,204],["SEQ100200300400500",400,"DOMAIN_200",290,399]] #Simulates a best_hit_domains.py output
+ANNOTATION_LIST=[["SEQ1",300,"DOMAIN_1",50,150],["SEQ1",300,"DOMAIN_2",200,268],["SEQ100200300400500",400,"DOMAIN_1",20,80],["SEQ100200300400500",400,"DOMAIN_2",81,204],["SEQ100200300400500",400,"DOMAIN_200",290,399]] #Simulates a processed Best_hit_domains.py output; real output will need to be preprocessed to be formatted this way
 SEQUENCE_IDS=[] #Create a list of unique sequence IDs such that number of indices in this list is the number of annotated sequences
 SEQUENCE_LENGTHS=[] #Create a list
 SEQLEN_DICT={}
