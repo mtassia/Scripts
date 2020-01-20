@@ -3,7 +3,7 @@
 import svgwrite
 
 #Creating variables that will be needed to be imported from HMMer domain_table, will be changed to be an import function
-ANNOTATION_LIST=[["SEQ1",300,"DOMAIN_1",50,150],["SEQ1",300,"DOMAIN_2",200,268],["SEQ200",400,"DOMAIN_1",20,80],["SEQ200",400,"DOMAIN_2",81,204],["SEQ200",400,"DOMAIN_200",290,399]] #Simulates a best_hit_domains.py output
+ANNOTATION_LIST=[["SEQ1",300,"DOMAIN_1",50,150],["SEQ1",300,"DOMAIN_2",200,268],["SEQ100200300400500",400,"DOMAIN_1",20,80],["SEQ100200300400500",400,"DOMAIN_2",81,204],["SEQ100200300400500",400,"DOMAIN_200",290,399]] #Simulates a best_hit_domains.py output
 SEQUENCE_IDS=[] #Create a list of unique sequence IDs such that number of indices in this list is the number of annotated sequences
 SEQUENCE_LENGTHS=[] #Create a list
 SEQLEN_DICT={}
@@ -21,16 +21,21 @@ NUM_SEQS=len(SEQUENCE_IDS) #Use the number of sequences to generate the length o
 LONGEST_ID_LEN=len(max(SEQUENCE_IDS, key=len)) #Create an integer variable which contains the length of the longest string - this is to be used to appropriately format the width of the canvas.
 LINE_SCAFFOLD_START=(LONGEST_ID_LEN*10)+5
 
+print(LONGEST_SEQ) #Variable sanity check - CAN DELETE
+print(NUM_SEQS) #Variable sanity check - CAN DELETE
+print(LONGEST_ID_LEN) #Variable sanity check - CAN DELETE
+print(LINE_SCAFFOLD_START) #Variable sanity check - CAN DELETE
+
 #CREATE CANVAS
 svgdoc=svgwrite.Drawing(
     filename="test_drawing.svg",
     size = (((LONGEST_ID_LEN*10)+LONGEST_SEQ+5),NUM_SEQS*30)) #At size 10 arial bold, the W glyph is 9.43px -- therefor the x for scaffold size is loaded as a function of (longest length sequence name * 10) + (length of longest sequence). Y scaffold size is loaded as the number of sequences * 30 (15 above and below scaffold line) for appropriate spacing. Final 5 accounts for the spacing between text and the line object.
 
-SEQLEN_DICT[SEQUENCE_IDS[0]] #HERE FOR TESTING PURPOSES ONLY - CAN DELETE
-print(SEQLEN_DICT) #HERE FOR TESTING PURPOSES ONLY - CAN DELETE
+#SEQLEN_DICT[SEQUENCE_IDS[0]] #HERE FOR TESTING PURPOSES ONLY - CAN DELETE
+#print(SEQLEN_DICT) #HERE FOR TESTING PURPOSES ONLY - CAN DELETE
 
 #Create TEXT AND LINE-SCAFFOLD PER SEQUENCE
-for SEQi in range(len(SEQLEN_DICT)):
+for SEQi in range(len(SEQLEN_DICT)): #Iterate numerically through a series of numbers equal to the number of unique sequence
     svgdoc.add(svgdoc.text( #Create the text for the sequence scaffold
         str(SEQUENCE_IDS[SEQi]), #Load text
         insert=((LONGEST_ID_LEN*10),((SEQi*30)+15)), #Place cursor
@@ -44,7 +49,7 @@ for SEQi in range(len(SEQLEN_DICT)):
     ))
     svgdoc.add(svgdoc.line( #Create the line for the sequence scaffold
         start=(LINE_SCAFFOLD_START,((SEQi*30)+15)), #Start of the line scaffold is equal to the LONGEST_ID_LEN * 10 + 5
-        end=(SEQLEN_DICT[SEQUENCE_IDS[SEQi]],((SEQi*30)+15)),
+        end=((LINE_SCAFFOLD_START)+SEQLEN_DICT[SEQUENCE_IDS[SEQi]],((SEQi*30)+15)),
         stroke='black',
         stroke_width='1px'
     ))
