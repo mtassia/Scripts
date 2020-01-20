@@ -62,18 +62,26 @@ for ID in SEQUENCE_IDS: #Loop through a list of the sequence IDs
                 DOMAIN_NAME=ANNOTATION[2] #Load the domain name
                 DOMAIN_START=ANNOTATION[3] #Load the start coordinate for the domain
                 DOMAIN_END=ANNOTATION[4] #Load the end coordinate for the domain
+                DOMAIN_MIDPOINT=(LINE_SCAFFOLD_START+((DOMAIN_START+DOMAIN_END)/2)) #Create a variable with the X coordinate of the domain shape midpoint
                 svgdoc.add(svgdoc.rect( #Create a rectangle overlaying the line that corresponds to each domain
                     insert=((LINE_SCAFFOLD_START+DOMAIN_START),((COUNT*30)+7.5)),
                     size=(((DOMAIN_END)-(DOMAIN_START)),15),
                     rx=2, #Make rectangles with rounded edges
                     fill="white",
                     stroke="black",
-                    stroke_width="1px",
+                    stroke_width="1px"
                 ))
-#                svgdoc.add(svgdoc.text(
-#                    str(DOMAIN_NAME),
-
-#                ))
+                svgdoc.add(svgdoc.text( #Create the lable for the domain ID within the domain shape
+                    str(DOMAIN_NAME), #Load domain name text
+                    insert=((DOMAIN_MIDPOINT),((COUNT*30)+15)), #Place cursor
+                    stroke='none', #No stroke on text
+                    fill=svgwrite.rgb(0,0,0), #Write letters in black with no stroke
+                    alignment_baseline="middle", #Positioning baseline is set to the middle of the written text
+                    text_anchor='middle', #Text is written from the middle position
+                    font_size='6px',
+                    font_weight='bold',
+                    font_family='Arial'
+                ))
     COUNT+=1
 
 #Save Drawing
