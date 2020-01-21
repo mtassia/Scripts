@@ -1,3 +1,7 @@
+#CODE DEPENDENCIES:
+#	Python3.6+
+#	Python3 modules: re, sys, svgwrite
+
 #Initial module import and directory setup
 import re
 import sys
@@ -139,5 +143,6 @@ for ID in SEQUENCE_IDS: #Loop through a list of the sequence IDs
     COUNT+=1
 
 #Save Drawing
-#FILE_OUTPUT=open((sys.argv[1]+".domain_diagram.svg"),'w')
+#FILE_OUTPUT_NAME=(sys.argv[1]+".domain_diagram.svg")
+#svgdoc.saveas(FILE_OUTPUT_NAME) #Save svg to a file named (sys.argv[1]).diagram.svg
 svgdoc.saveas("test_drawing.svg") #LINE FOR TESTING PURPOSES - CAN DELETE
