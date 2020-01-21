@@ -82,7 +82,7 @@ print(LINE_SCAFFOLD_START) #Variable sanity check - CAN DELETE
 #CREATE CANVAS
 svgdoc=svgwrite.Drawing(
     filename="test_drawing.svg",
-    size = (((LONGEST_ID_LEN*10)+LONGEST_SEQ+5),NUM_SEQS*30)) #At size 10 arial bold, the W glyph is 9.43px -- therefor the x for scaffold size is loaded as a function of (longest length sequence name * 10) + (length of longest sequence). Y scaffold size is loaded as the number of sequences * 30 (15 above and below scaffold line) for appropriate spacing. Final 5 accounts for the spacing between text and the line object.
+    size = (((LONGEST_ID_LEN*10)+LONGEST_SEQ+(LONGEST_SEQ*(1/20))),NUM_SEQS*30)) #At size 10 arial bold, the W glyph is 9.43px -- therefor the x for scaffold size is loaded as a function of (longest length sequence name * 10) + (length of longest sequence) + (Addition 5% of the length of the longest seq to account for trim). Y scaffold size is loaded as the number of sequences * 30 (15 above and below scaffold line) for appropriate spacing. Final 5 accounts for the spacing between text and the line object.
 
 #SEQLEN_DICT[SEQUENCE_IDS[0]] #HERE FOR TESTING PURPOSES ONLY - CAN DELETE
 #print(SEQLEN_DICT) #HERE FOR TESTING PURPOSES ONLY - CAN DELETE
@@ -105,6 +105,16 @@ for SEQi in range(len(SEQLEN_DICT)): #Iterate numerically through a series of nu
         end=((LINE_SCAFFOLD_START)+SEQLEN_DICT[SEQUENCE_IDS[SEQi]],((SEQi*30)+15)),
         stroke='black',
         stroke_width='1px'
+    ))
+    svgdoc.add(svgdoc.text( #Create a text object which is the scaffold length and place it at the end of the line
+        (str(SEQLEN_DICT[SEQUENCE_IDS[SEQi]])+'aa'), #Load sequence length
+        insert=((LINE_SCAFFOLD_START)+SEQLEN_DICT[SEQUENCE_IDS[SEQi]]+5,((SEQi*30)+15)), #Insert cursor at the end of the line object + 5
+        stroke='none',
+        fill=svgwrite.rgb(0,0,0),
+        alignment_baseline="middle",
+        text_anchor='start',
+        font_size='6px',
+        font_family='Arial'
     ))
 
 #Iterate through annotations per sequence to make domain overlays
@@ -132,7 +142,6 @@ for ID in SEQUENCE_IDS: #Loop through a list of the sequence IDs
                     alignment_baseline="middle", #Positioning baseline is set to the middle of the written text
                     text_anchor='middle', #Text is written from the middle position
                     font_size='6px',
-                    font_weight='bold',
                     font_family='Arial'
                 ))
     COUNT+=1
