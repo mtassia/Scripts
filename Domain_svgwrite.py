@@ -1,12 +1,65 @@
-#This code is entirely experimental and is being developed to accelerate domain diagram creation
 #Initial module import and directory setup
+import re
+import sys
 import svgwrite
 
+#Following block imports necessary data from *besthits.tsv input into a nested list where each entry is a list with the following contents: ["SEQ_ID",SEQ_LENGTH,"DOMAIN_NAME",START,STOP]
+
+#ATOM-SPECIFIC BLOCK FOR BUILDING CODE - CAN DELETE:
+import os
+print(os.getcwd())
+BEST_HITS=open("Hsapiens_genome_proteins.RHD_DNA_bind_present_after_revision.hmmscan_vs_revised_Pfam.domtblout.besthits.tsv", 'r')
+#######################################
+
+#LOAD BESTHITS FILE FROM COMMAND LINE ARGUMENT [1]
+#BEST_HITS=open(sys.argv[1],'r')
+
+def convert_domtblout_values(string_list): #Create function to convert values of domain table to appropriate string/float elements
+	string_list[2] = int(string_list[2])
+	string_list[5] = int(string_list[5])
+	string_list[9] = int(string_list[9])
+	string_list[10] = int(string_list[10])
+	string_list[15] = int(string_list[15])
+	string_list[16] = int(string_list[16])
+	string_list[17] = int(string_list[17])
+	string_list[18] = int(string_list[18])
+	string_list[19] = int(string_list[19])
+	string_list[20] = int(string_list[20])
+	string_list[6] = float(string_list[6])
+	string_list[7] = float(string_list[7])
+	string_list[8] = float(string_list[8])
+	string_list[11] = float(string_list[11])
+	string_list[12] = float(string_list[12])
+	string_list[13] = float(string_list[13])
+	string_list[14] = float(string_list[14])
+	string_list[21] = float(string_list[21])
+
+LINE_TO_LIST=[] #Initiate list object which will be filled with the necessary fields for domain diagram svg generation
+for LINE in BEST_HITS: #read through best hits annotation and format lines appropriately to the hmmscan domain table fields
+    SPLIT_LINE=LINE.split() #convert read string into a list object
+    DOMTBL_LINE=re.split(r'\s+', LINE.rstrip())	#Initiates an object where fields 0-21 are as designated by HMMers domtblout and 22- are the final field(s)
+    DESCRIPTION="" #Initiates a variable to create a single string corresponding to the 'description of target' column in the domtblout format
+    for INDEX in range(22, len(DOMTBL_LINE)): #Indicies between 22: correspond to an improperly formated 'description of target' which needs to be converted to a single list index
+        DESCRIPTION+=DOMTBL_LINE[INDEX]+" " #Import the 22: indices into a single string
+    del DOMTBL_LINE[22:] #Remove the improperly formatted indices from DOMTBL_LINE
+    DOMTBL_LINE.append(DESCRIPTION.rstrip()) #Replace the removed indices with the properly formatted index
+    convert_domtblout_values(DOMTBL_LINE) #Convert integer and float indices to their appropriate classes
+    LINE_TO_LIST.append(DOMTBL_LINE) #After cleaning datalines, append to this variable. LINE_TO_LIST will be a list-of-lists where each primary index is a line from the DOMTBLOUT
+BEST_HITS.close()
+
+ANNOTATION_LIST=[] #Initiate a list object to be used for svg diagram creation
+for ANNOTATION in LINE_TO_LIST:
+    ANNOTATION_DATA=[ANNOTATION[3],ANNOTATION[5],ANNOTATION[0],ANNOTATION[-4],ANNOTATION[-3]]
+    ANNOTATION_LIST.append(ANNOTATION_DATA)
+#######################################
+
+#Remaineder of code below generates svg graphic from ANNOTATION_LIST list object
 #Creating variables that will be needed to be imported from HMMer domain_table, will be changed to be an import function
-ANNOTATION_LIST=[["SEQ1",300,"DOMAIN_1",50,150],["SEQ1",300,"DOMAIN_2",200,268],["SEQ100200300400500",400,"DOMAIN_1",20,80],["SEQ100200300400500",400,"DOMAIN_2",81,204],["SEQ100200300400500",400,"DOMAIN_200",290,399]] #Simulates a processed Best_hit_domains.py output; real output will need to be preprocessed to be formatted this way
+#ANNOTATION_LIST=[["SEQ1",300,"DOMAIN_1",50,150],["SEQ1",300,"DOMAIN_2",200,268],["SEQ100200300400500",400,"DOMAIN_1",20,80],["SEQ100200300400500",400,"DOMAIN_2",81,204],["SEQ100200300400500",400,"DOMAIN_200",290,399]] #Simulates a processed Best_hit_domains.py output; real output will need to be preprocessed to be formatted this way
+
 SEQUENCE_IDS=[] #Create a list of unique sequence IDs such that number of indices in this list is the number of annotated sequences
-SEQUENCE_LENGTHS=[] #Create a list
-SEQLEN_DICT={}
+SEQUENCE_LENGTHS=[] #Create a list to obtain sequence lengths which will be used to format the canvas
+SEQLEN_DICT={} #Create a dictionary which will be filled with seq_IDs:seq_length pairs
 
 for i in ANNOTATION_LIST: #Obtain basic sequence information
     if i[0] not in SEQUENCE_IDS:
@@ -85,4 +138,5 @@ for ID in SEQUENCE_IDS: #Loop through a list of the sequence IDs
     COUNT+=1
 
 #Save Drawing
-svgdoc.saveas("test_drawing.svg")
+#FILE_OUTPUT=open((sys.argv[1]+".domain_diagram.svg"),'w')
+svgdoc.saveas("test_drawing.svg") #LINE FOR TESTING PURPOSES - CAN DELETE
