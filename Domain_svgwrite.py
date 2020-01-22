@@ -1,3 +1,5 @@
+#!/bin/python3
+
 #Initial module import and directory setup
 import re
 import sys
@@ -5,14 +7,14 @@ import svgwrite
 
 #Following block imports necessary data from *besthits.tsv input into a nested list where each entry is a list with the following contents: ["SEQ_ID",SEQ_LENGTH,"DOMAIN_NAME",START,STOP]
 
-#ATOM-SPECIFIC BLOCK FOR BUILDING CODE - CAN DELETE:
-import os
-print(os.getcwd())
-BEST_HITS=open("Hsapiens_genome_proteins.RHD_DNA_bind_present_after_revision.hmmscan_vs_revised_Pfam.domtblout.besthits.tsv", 'r')
+#ATOM-SPECIFIC BLOCK FOR BUILDING CODE - LEAVE FOR FUTURE TESTING:
+#import os
+#print(os.getcwd())
+#BEST_HITS=open("Hsapiens_genome_proteins.RHD_DNA_bind_present_after_revision.hmmscan_vs_revised_Pfam.domtblout.besthits.tsv", 'r')
 #######################################
 
 #LOAD BESTHITS FILE FROM COMMAND LINE ARGUMENT [1]
-#BEST_HITS=open(sys.argv[1],'r')
+BEST_HITS=open(sys.argv[1],'r')
 
 def convert_domtblout_values(string_list): #Create function to convert values of domain table to appropriate string/float elements
 	string_list[2] = int(string_list[2])
@@ -138,6 +140,9 @@ for ID in SEQUENCE_IDS: #Loop through a list of the sequence IDs
                 ))
     COUNT+=1
 
-#Save Drawing
-#FILE_OUTPUT=open((sys.argv[1]+".domain_diagram.svg"),'w')
-svgdoc.saveas("test_drawing.svg") #LINE FOR TESTING PURPOSES - CAN DELETE
+#SAVE DRAWING
+FILE_OUTPUT_NAME=(str(sys.argv[1])+".domain_diagram.svg")
+svgdoc.saveas(FILE_OUTPUT_NAME)
+
+#TEST OUTPUT - SAVE FOR FUTURE TESTING
+#svgdoc.saveas("test_drawing.svg") #LINE FOR TESTING PURPOSES - CAN DELETE
