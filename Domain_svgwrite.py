@@ -148,4 +148,3 @@ svgdoc.saveas(FILE_OUTPUT_NAME)
 
 #TEST OUTPUT - SAVE FOR FUTURE TESTING
 #svgdoc.saveas("test_drawing.svg") #LINE FOR TESTING PURPOSES - CAN DELETE
->>>>>>> d032d19af33bbf0d98e26b167801ade2f3fa61c9
